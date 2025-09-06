@@ -75,7 +75,6 @@ with open("logistic_model.pkl", "wb") as f:
 with open("logistic_model.pkl", "rb") as f:
    loaded_model = pickle.load(f)
 y_pred=loaded_model.predict(X_test)
-print(classification_report(Y_test,y_pred))
 feature_order = continuous_features + binary_features
 with open("scaler.pkl", "rb") as f:
     loaded_scaler = pickle.load(f)
@@ -114,5 +113,12 @@ sample_dropout = {
     "Debtor": 1,                            
     "Tuition fees up to date": 0              
 }
-
+# {
+#     "Risk_Score": 0.98,
+#     "Prediction_Label": "Dropout",
+#     "Recommendations": [
+#         "Attend mentoring sessions",
+#         "Seek academic counseling"
+#     ]
+# }
 print(predict_from_backend(sample_dropout))
