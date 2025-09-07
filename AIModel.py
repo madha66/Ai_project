@@ -5,6 +5,10 @@ import pickle
 from sklearn.preprocessing import StandardScaler
 from imblearn.over_sampling import RandomOverSampler
 from sklearn.metrics import classification_report
+# import LogisticRegression from the new models.py file
+from models import LogisticRegression
+
+# ... rest of the code that uses the LogisticRegression class
 cols = ["Age at enrollment","Gender","Scholarship holder","Curricular units 1st sem (enrolled)","Curricular units 1st sem (approved)","Curricular units 1st sem (grade)","Curricular units 2nd sem (enrolled)","Curricular units 2nd sem (approved)","Curricular units 2nd sem (grade)","Debtor","Tuition fees up to date","Target"]
 df=pd.read_csv("data.csv",sep=";",usecols=cols)
 df["Target"] = (df["Target"] == "Dropout").astype(int) # 1 is DropOut, 0 is Enrolled/Graduate
@@ -42,32 +46,7 @@ def scale(dataframe, oversampling=False, fit_scaler=False, scaler_path="scaler.p
 train,X_train,Y_train=scale(train,True,True)
 test,X_test,Y_test=scale(test,False,False)
 Valid,X_valid,Y_valid=scale(valid,False,False)
-class LogisticRegression:
-  def __init__(self,learnrate,iteration):
-    self.learnrate=learnrate
-    self.iteration=iteration
-  def sigmoid(self, z):
-    p=1/(1+py.exp(-z))
-    return p
-  def fit(self,X,y):
-    self.m,self.n=X.shape
-    self.w=py.zeros(self.n)
-    self.b=0
-    for _ in range(self.iteration):
-      z=py.dot(X,self.w)+self.b
-      y_pred=self.sigmoid(z)
-      #lossfunction
-      dw=(1/self.m)*py.dot(X.T,(y_pred-y))
-      db=(1/self.m)*sum(y_pred-y)
-      #reduce w and b
-      self.w-=self.learnrate*dw
-      self.b-=self.learnrate*db
-  def predict_prob(self, X):
-      z = py.dot(X, self.w) + self.b
-      return self.sigmoid(z)
-  def predict(self,X):
-    prob = self.predict_prob(X)
-    return [1 if i>0.5 else 0 for i in prob]
+
 logs=LogisticRegression(0.01,5000)
 logs.fit(X_train,Y_train)
 with open("logistic_model.pkl", "wb") as f:
